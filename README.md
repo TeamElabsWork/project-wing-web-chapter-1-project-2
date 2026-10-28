@@ -1,160 +1,157 @@
-# Photography Showcase Platform — Chapter 1
+# 🎮 KIIT SocietyDex
 
-> An open, student-first web platform for KIIT University photography enthusiasts to publish, share, and discover original photography work without club membership barriers.
+> **A Pokémon-Inspired Society Discovery Platform for KIIT**  
+> *Tagline: Gotta Know 'Em All — KIIT Edition*
+
+---
+
+## 📖 Project Overview
+
+**KIIT SocietyDex** is a gamified web platform designed to showcase and explore the diverse societies and student clubs of KIIT University. Taking inspiration from the classic Pokémon Pokédex, every university society is represented as a collectible Pokédex-style entry with its own number, type, abilities, and animated stat bars.
+
+### 🎮 The Pokédex Concept Mapping
+
+| Pokémon Pokédex 🎮 | KIIT SocietyDex 🏛️ | Description |
+| :--- | :--- | :--- |
+| **Unique Pokémon Card** | **Unique Society Card** | Every society gets a collectible entry with a unique Dex number (`#001`, `#002`). |
+| **Pokémon Type & Abilities** | **Society Domain & Activities** | Categorized by domain: ⚡ Tech, 🧠 AI/ML, ⚙️ Robotics, 📷 Creative, 🎵 Sound, 💃 Arts, 🏆 Sports, 💰 Business, 🌱 Social. |
+| **Battle Stats & Evolution** | **Society Information & Stats** | Game-inspired visual stat bars: Activity, Events, Community, Innovation, and Technical Skill. |
+| **Pokédex Search & Filter** | **Society Search & Filter** | Real-time search by name, keywords, or Dex number; one-click domain filter chips. |
+| **Pokédex Navigation** | **Previous / Next Navigation** | Direct sequential navigation between society entries (`← #003 KRS | #004 KPC | #005 Korus →`). |
+| **Complete the Pokédex** | **Explore All Societies** | Discover recruitment status, coordinators, achievements, and upcoming events. |
 
 ---
 
 ## 🏗️ Architecture & Collaboration Model
 
-This codebase is built using a **Contract-Driven, Decoupled Fullstack Architecture** designed for seamless collaboration between **Frontend ("Up to JS")** engineers and **Fullstack** engineers:
+The project is structured to allow the **Frontend ("Up to JS")** team and the **Fullstack** team to work in parallel without blocking each other:
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                       PRESENTATION LAYER (Up to JS Team)                    │
-│  • React Components (Tailwind CSS, Lucide icons, responsive layouts)        │
-│  • Client-side interactions (Lightbox zoom, drag-and-drop dropzone, modals) │
-│  • Interactive state (Pagination controller, skeleton cards, toast alerts)  │
+│                       SOCIETYDEX FRONTEND (Up to JS Team)                   │
+│  • HTML5 Semantic Page Structure (index.html, pages/society.html)           │
+│  • CSS3 Pokédex Visual Language (cards.css, details.css, stat bars)         │
+│  • JavaScript DOM Logic (Dynamic card render, search/filter, navigation)    │
 └──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │ Consumes typed contracts & endpoints
+                                       │ Consumes data.js (offline) OR Supabase API
                                        ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                        DATA CONTRACTS & TYPES (/types)                      │
-│  • Shared TypeScript interfaces: IUser, IPhotograph, ExifData               │
-│  • Mock Dataset (/lib/mock-data.ts) for instant zero-dependency UI testing  │
+│                        DATA & CLIENT LAYER (/js/data.js)                    │
+│  • Central Society Dataset (data.js) - Works 100% offline with zero setup   │
+│  • Supabase Client Wrapper (supabase-client.js) for live cloud data         │
 └──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │ Powered by server logic
+                                       │ Powered by backend services
                                        ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                       BACKEND & PLATFORM CORE (Fullstack Team)              │
-│  • Next.js 16 API Route Handlers (Auth, Photos CRUD, User Profile PATCH)    │
-│  • MongoDB Atlas + Mongoose Models (Users, Photographs with indexes)        │
-│  • Auth.js v5 (NextAuth) session tokens & route middleware protection       │
-│  • Cloudinary storage streaming upload & asset destruction pipeline         │
-│  • Python FastAPI Microservice (/services/image-service) for EXIF & safety  │
+│                      BACKEND & DATABASE (Fullstack Team)                    │
+│  • Supabase Auth & REST APIs (Access control, data queries, rankings)       │
+│  • PostgreSQL Database (supabase/schema.sql, tables, stats, memberships)    │
+│  • Analytics & Statistics Engine (Python microservice / data seeder)        │
 └─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📁 Project Folder Structure
+
+```text
+kiit-societydex/
+├── index.html                   # Homepage: Pokédex banner, search bar, domain filter chips, card grid
+├── pages/
+│   └── society.html             # Pokédex Detail Page: Left (avatar/meta), Right (about/events), Bottom (stat bars)
+├── css/
+│   ├── style.css                # Global Pokédex theme, colors, navigation bar, typography
+│   ├── cards.css                # Pokédex collectible cards, glowing type badges, hover effects
+│   └── details.css              # Pokédex detail screen layout, animated stat bars
+├── js/
+│   ├── data.js                  # Central dataset of KIIT societies (works offline out-of-the-box)
+│   ├── app.js                   # Homepage rendering controller
+│   ├── search.js                # Search, domain filter, and sorting controller
+│   ├── society.js               # Detail page dynamic renderer & prev/next navigator
+│   └── supabase-client.js       # Supabase SDK integration with automatic fallback to data.js
+├── supabase/
+│   ├── schema.sql               # PostgreSQL tables (societies, society_stats, profiles, bookmarks)
+│   └── seed.sql                 # SQL insert statements for initial society data
+├── assets/
+│   ├── logos/                   # Society avatar images & logos
+│   ├── icons/                   # Pokédex domain type icons
+│   └── images/                  # UI graphic elements
+└── README.md                    # Project documentation & team guide
 ```
 
 ---
 
 ## 👥 Unified Team Roster & Ownership
 
-### Group A: Frontend & UI Specialists ("Up to JS")
-*Focus: Visual design, Tailwind CSS, DOM interactivity, drag-and-drop, modals, and client-side validation.*
+### 🎨 Group A: Frontend & "Up to JS" Team (9 Members)
+*Focus: HTML5, CSS3, DOM manipulation, Pokédex UI, animations, cards, search, filters, and stat bars.*
 
-| Member | GitHub Handle | Assigned Issue | Core Deliverable |
+| Member | GitHub Handle | Role & Ownership | Primary Issues |
 | :--- | :--- | :--- | :--- |
-| **Aman Bhardwaj** | `@aman-0905` | **Issue #1** | User Registration Form & Client-Side Validation UI |
-| **Apoorv Pal** | `@pandatech717-code` | **Issue #2** | User Login Page & Session UI State Feedback |
-| **Ananya Umang** | `@ananya-umang` | **Issue #3** | Public Gallery Hero Banner & Responsive Grid Layout |
-| **SATYAM KUMAR** | `@SatyamCodes7` | **Issue #4** | Client-Side Pagination & "Load More" Controller |
-| **Samridhi kumari** | `@404SAMfound` | **Issue #5** | Photo Detail Page Presentation & Photographer Card |
-| **Tushar Agarwala** | `@Tushar-162` | **Issue #6** | Fullscreen Lightbox Zoom & Modal Overlay |
-| **Satyaprakash Samal** | `@satyaprakashs89420-blip` | **Issue #7** | Drag-and-Drop Image Upload Dropzone & Live Preview |
-| **Manish Pandey** | `@manishpandey01-max` | **Issue #8** | Public Photographer Portfolio Showcase Layout |
-| **Aman Bhardwaj** | `@aman-0905` | **Issue #9** | Edit Photograph Metadata Form Modal |
-| **Apoorv Pal** | `@pandatech717-code` | **Issue #10** | Edit Profile Settings Modal & Bio Counter |
-| **Ananya Umang** | `@ananya-umang` | **Issue #11** | Community Guidelines Modal & Accessibility (A11y) Polish |
-| **Manish Pandey** | `@manishpandey01-max` | **Issue #12** | Gallery Skeleton Cards & Toast Notification Container |
+| **Aman Bhardwaj** | [`@aman-0905`](https://github.com/aman-0905) | UI / HTML & Cards | Homepage Structure & Pokédex Card Markup |
+| **Apoorv Pal** | [`@pandatech717-code`](https://github.com/pandatech717-code) | JavaScript Interactivity | Dynamic Society Card Rendering from `data.js` |
+| **Ananya Umang** | [`@ananya-umang`](https://github.com/ananya-umang) | CSS3 & Theme Design | Pokédex Red Header, LED Indicators & Banner Theme |
+| **SATYAM KUMAR** | [`@SatyamCodes7`](https://github.com/SatyamCodes7) | JavaScript Controller | Search & Domain Filter Engine (`search.js`) |
+| **Samridhi kumari** | [`@404SAMfound`](https://github.com/404SAMfound) | UI / Detail Page | Two-Column Pokédex Detail Screen Structure (`society.html`) |
+| **Tushar Agarwala** | [`@Tushar-162`](https://github.com/Tushar-162) | CSS / Pokédex Cards | Card Styling, Holographic Hover & Type Badges (`cards.css`) |
+| **Satyaprakash Samal** | [`@satyaprakashs89420-blip`](https://github.com/satyaprakashs89420-blip) | JavaScript Navigation | Previous & Next Sequential Society Navigator |
+| **Manish Pandey** | [`@manishpandey01-max`](https://github.com/manishpandey01-max) | CSS / Stat Bars | Animated Pokédex Stat Bars & Progress Trackers (`details.css`) |
+| **Vishesh Mani Tripathi** | [`@Vishee02`](https://github.com/Vishee02) | Frontend & Supabase Bridge | Live Data Integration (`supabase-client.js`) & Offline Fallback |
 
 ---
 
-### Group B: Systems & Fullstack Engineers ("Fullstack")
-*Focus: API Route Handlers, Database Schemas, Session Security, Cloudinary Streaming, and Python Service.*
+### ⚙️ Group B: Fullstack & Systems Team (9 Members)
+*Focus: Supabase Auth/APIs, PostgreSQL schema, data modeling, backend seeding, security, and statistics calculation.*
 
-| Member | GitHub Handle | Assigned Issue | Core Deliverable |
+| Member | GitHub Handle | Role & Ownership | Primary Issues |
 | :--- | :--- | :--- | :--- |
-| **Satwik Chandra** | `@SATWIKKKKK` | **Issue #13** | Core System Middleware & Route Protection Guard |
-| **Tejash Rai** | `@tejrai07` | **Issue #14** | Registration API Route & Auth.js v5 Credentials Provider |
-| **Abhisekh Nayak** | `@AbhisekhNayak21` | **Issue #15** | Cloudinary Upload Pipeline & Multipart Route Handler |
-| **Dristi Singh** | `@dristi-singh` | **Issue #16** | Paginated Photos API Route (`GET /api/photos`) |
-| **Rishikesh Kumar** | `@Rishikesh2298` | **Issue #17** | Photo Detail Backend Route (`GET /api/photos/[id]`) |
-| **Mritunjay Kumar Mandal** | `@Mritunjay4528` | **Issue #18** | User Profile Backend Route (`PATCH /api/users/[id]`) |
-| **Saroj Sen** | `@sarojsenn` | **Issue #19** | Photo Owner Edit & Delete API (`DELETE /api/photos/[id]`) |
-| **Sumit Bag** | `@Corot-7BSumit` | **Issue #20** | Admin Moderation Override Endpoints & Seed Script |
-| **Ayush Sinha** | `@TheRedGrim07` | **Issue #21** | Python FastAPI Photo Intelligence Microservice |
-
----
-
-## 📁 Repository Structure
-
-```text
-project-wing-web-chapter-1-project-2/
-├── web/                           # Next.js 16 Web Application
-│   ├── app/                       # App Router routes & pages
-│   │   ├── (auth)/                # /login & /register
-│   │   ├── api/                   # Server Route Handlers
-│   │   │   ├── auth/[...nextauth]/# NextAuth v5 session endpoint
-│   │   │   ├── photos/            # GET (paginated) & POST (upload)
-│   │   │   ├── photos/[id]/       # GET, PATCH, DELETE
-│   │   │   └── users/[id]/        # GET & PATCH
-│   │   ├── photos/[id]/           # Photo detail page
-│   │   ├── users/[id]/            # User portfolio page
-│   │   ├── upload/                # Photo upload form
-│   │   ├── layout.tsx             # Root layout with Navbar & Footer
-│   │   └── page.tsx               # Homepage gallery
-│   ├── components/                # Modular React UI components
-│   │   ├── gallery/               # PhotoCard, PhotoGrid, Lightbox, Skeletons
-│   │   ├── layout/                # Navbar, Footer, GuidelinesModal
-│   │   ├── profile/               # EditProfileModal
-│   │   └── ui/                    # Modals, Buttons, Toasts
-│   ├── lib/                       # Utilities (mongodb.ts, cloudinary.ts, mock-data.ts)
-│   ├── models/                    # Mongoose Data Models (User.ts, Photograph.ts)
-│   ├── types/                     # Shared TypeScript contracts (index.ts)
-│   ├── auth.ts                    # Auth.js configuration
-│   └── .env.example
-├── services/
-│   └── image-service/             # Python FastAPI Photo Intelligence Microservice
-│       ├── main.py
-│       ├── requirements.txt
-│       └── README.md
-└── README.md                      # Central engineering guide
-```
+| **Satwik Chandra** | [`@SATWIKKKKK`](https://github.com/SATWIKKKKK) | Systems Lead | Supabase Project Setup & Core API Client Architecture |
+| **Tejash Rai** | [`@tejrai07`](https://github.com/tejrai07) | Backend / Auth | Supabase Authentication & Role-Based Access Control |
+| **Abhisekh Nayak** | [`@AbhisekhNayak21`](https://github.com/AbhisekhNayak21) | Database Engineer | PostgreSQL Schema (`supabase/schema.sql`) & Table Constraints |
+| **Dristi Singh** | [`@dristi-singh`](https://github.com/dristi-singh) | Backend Data | Seed Data Pipeline (`supabase/seed.sql`) & Society Ingestion |
+| **Rishikesh Kumar** | [`@Rishikesh2298`](https://github.com/Rishikesh2298) | API Integration | Society Query & Detail Retrieval API Endpoints |
+| **Mritunjay Kumar Mandal** | [`@Mritunjay4528`](https://github.com/Mritunjay4528) | Database Operations | Society Recruitment Status & Bookmarks Table Schema |
+| **Saroj Sen** | [`@sarojsenn`](https://github.com/sarojsenn) | Data Quality & Testing | Stat Range Validation (0–100%) & Schema Integrity Tests |
+| **Sumit Bag** | [`@Corot-7BSumit`](https://github.com/Corot-7BSumit) | Fullstack Integration | API Error Handling, CORS & Environment Configuration |
+| **Ayush Sinha** | [`@TheRedGrim07`](https://github.com/TheRedGrim07) | Senior Systems | Society Activity Scoring & Analytics Engine |
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Web Application (`/web`)
-```bash
-cd web
-npm install
-cp .env.example .env.local
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+### 1. Running the Frontend (Zero Setup Required!)
+Because the initial version is built with pure HTML5, CSS3, and JavaScript, you don't even need Node.js installed to view the project:
 
-> **Tip for Frontend (JS) Developers**: You can import `mockPhotographs` and `mockUsers` from `@/lib/mock-data` to render and test your components immediately with real sample images without waiting for the database to be connected!
+- **Option A (Instant)**: Simply double-click `index.html` to open it in your browser (Chrome, Edge, Firefox, Safari).
+- **Option B (Local Web Server)**:
+  ```bash
+  npx serve .
+  # or using Python:
+  python -m http.server 3000
+  ```
+  Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### 2. Python Image Service (`/services/image-service`)
-```bash
-cd services/image-service
-python -m venv venv
-# On Windows:
-.\venv\Scripts\activate
-# On Linux/macOS:
-# source venv/bin/activate
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
-```
-Open [http://localhost:8000/docs](http://localhost:8000/docs) for the interactive Swagger API documentation.
+### 2. Developing Features
+- **Frontend Developers ("Up to JS")**: Work inside `index.html`, `pages/`, `css/`, and `js/`. You can use the `SOCIETY_DATA` array in `js/data.js` to see real KIIT society entries immediately!
+- **Fullstack Developers**: Work inside `supabase/` and `js/supabase-client.js`. Execute `supabase/schema.sql` on your Supabase project dashboard to set up the PostgreSQL tables.
 
 ---
 
-## 🌿 Git & Pull Request Guidelines
+## 🌿 Git Collaboration & Pull Request Workflow
 
-1. Always branch off the latest `dev` branch:
+1. Always pull latest `dev` before creating your feature branch:
    ```bash
    git checkout dev
    git pull origin dev
    git checkout -b feat/issue-X-description
    ```
-2. Commit with clean, conventional messages:
+2. Make your changes and commit with clean conventional messages:
    ```bash
-   git commit -m "feat(gallery): add lightbox zoom component"
+   git commit -m "feat(cards): implement pokédex card hover animations"
    ```
-3. Push your feature branch and open a Pull Request into `dev`:
+3. Push your branch and open a Pull Request into `dev`:
    ```bash
    git push -u origin feat/issue-X-description
    ```
 4. In your PR description, link your issue: `Closes #X`.
-5. Once verified by the tech lead, your code will be merged into `dev`.
+5. Once reviewed and approved by the tech lead, your code will be merged into `dev`.
