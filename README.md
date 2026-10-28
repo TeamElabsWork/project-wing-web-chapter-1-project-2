@@ -83,7 +83,7 @@ kiit-societydex/
 
 ## 👥 Unified Team Roster & Ownership
 
-### 🎨 Group A: Frontend & "Up to JS" Team (9 Members)
+### 🎨 Group A: Frontend & "Up to JS / React" Team (11 Members)
 *Focus: HTML5, CSS3, DOM manipulation, Pokédex UI, animations, cards, search, filters, and stat bars.*
 
 | Member | GitHub Handle | Role & Ownership | Primary Issues |
@@ -97,6 +97,8 @@ kiit-societydex/
 | **Satyaprakash Samal** | [`@satyaprakashs89420-blip`](https://github.com/satyaprakashs89420-blip) | JavaScript Navigation | Previous & Next Sequential Society Navigator |
 | **Manish Pandey** | [`@manishpandey01-max`](https://github.com/manishpandey01-max) | CSS / Stat Bars | Animated Pokédex Stat Bars & Progress Trackers (`details.css`) |
 | **Vishesh Mani Tripathi** | [`@Vishee02`](https://github.com/Vishee02) | Frontend & Supabase Bridge | Live Data Integration (`supabase-client.js`) & Offline Fallback |
+| **Rewant Rai** | [`@rairewant26`](https://github.com/rairewant26) | JavaScript / Storage | LocalStorage Bookmarks & "My Squad" Favorites Controller (#24) |
+| **Shaswat Kumar** | [`@shaswat8584`](https://github.com/shaswat8584) | React / UI Components | Society Comparison Matrix & Recruitment Apply Modal (#25) |
 
 ---
 
