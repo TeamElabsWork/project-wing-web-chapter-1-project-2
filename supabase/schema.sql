@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     name VARCHAR(80) NOT NULL,
     email VARCHAR(120) NOT NULL,
+    role VARCHAR(30) DEFAULT 'student' CHECK (role IN ('student', 'society_coordinator', 'admin')),
     roll_number VARCHAR(20),
     avatar_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
@@ -60,6 +61,8 @@ CREATE TABLE IF NOT EXISTS public.society_bookmarks (
 -- Row Level Security (RLS) Policies
 ALTER TABLE public.societies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.society_stats ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.society_bookmarks ENABLE ROW LEVEL SECURITY;
 
 -- Allow public read access to all societies and stats
 CREATE POLICY "Public societies are viewable by everyone." 
@@ -67,3 +70,48 @@ ON public.societies FOR SELECT USING (true);
 
 CREATE POLICY "Public society stats are viewable by everyone." 
 ON public.society_stats FOR SELECT USING (true);
+
+-- Profiles: users can read and update only their own profile
+CREATE POLICY "Users can view their own profile."
+ON public.profiles FOR SELECT USING (auth.uid() = id);
+
+CREATE POLICY "Users can update their own profile."
+ON public.profiles FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "New profiles are created via signup trigger."
+ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- Bookmarks: users can manage only their own bookmarks
+CREATE POLICY "Users can view their own bookmarks."
+ON public.society_bookmarks FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can add their own bookmarks."
+ON public.society_bookmarks FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can remove their own bookmarks."
+ON public.society_bookmarks FOR DELETE USING (auth.uid() = user_id);
+
+-- ========================================================
+-- TRIGGER: Auto-create a profile row on new user signup
+-- Reads name & roll_number from auth.users.raw_user_meta_data
+-- ========================================================
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, name, email, role, roll_number)
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.raw_user_meta_data->>'name', ''),
+    NEW.email,
+    COALESCE(NEW.raw_user_meta_data->>'role', 'student'),
+    COALESCE(NEW.raw_user_meta_data->>'roll_number', NULL)
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Attach the trigger to auth.users
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();

@@ -47,6 +47,9 @@ async function getSocietyById(id) {
   return all.find(s => s.id === id || s.dexNumber === `#${id}`) || all[0];
 }
 
+// Expose the Supabase client instance for use by auth.js and other modules
+window.supabaseClient = supabaseClient;
+
 window.SocietyDexAPI = {
   getSocieties,
   getSocietyById
